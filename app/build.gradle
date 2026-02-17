@@ -1,0 +1,75 @@
+plugins {
+    id 'application'
+    id 'java'
+    id 'checkstyle'
+    id 'com.github.spotbugs' version '6.0.18'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.10.2')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+/*
+ * Fix Checkstyle dependency conflict (guava vs legacy google-collections).
+ * This ensures ./gradlew checkstyleMain runs successfully from CLI.
+ */
+configurations {
+    checkstyle {
+        resolutionStrategy.capabilitiesResolution.withCapability("com.google.collections:google-collections") {
+            select("com.google.guava:guava:33.0.0-jre")
+            because("Avoid capability conflict between guava and google-collections during Checkstyle resolution")
+        }
+    }
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+application {
+    mainClass = 'edu.asu.ser316.petshelter.App'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+checkstyle {
+    toolVersion = '10.12.7'
+    configFile = file("$rootDir/config/checkstyle/checkstyle.xml")
+}
+
+spotbugs {
+    toolVersion = '4.8.6'
+}
+
+tasks.named('spotbugsMain') {
+    reports {
+        html.required = true
+        xml.required = false
+    }
+}
+
+tasks.named('spotbugsTest') {
+    reports {
+        html.required = true
+        xml.required = false
+    }
+}
+
+/* Required custom task for Deliverable A */
+tasks.register('runSystemDebug', JavaExec) {
+    group = 'application'
+    description = 'Run the system with verbose debug output enabled.'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = application.mainClass
+    args '--debug'
+}
+
