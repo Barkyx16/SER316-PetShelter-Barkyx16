@@ -10,6 +10,7 @@ public class SimulationRunner {
 
   private final List<Animal> animalsCol = new ArrayList<>();
   private final AnimalFactory animalFactory = new BasicAnimalFactory();
+  private final AnimalObserver observer = new ConsoleAnimalObserver();
 
   public SimulationRunner() {
     seedAnimals();
@@ -26,6 +27,7 @@ public class SimulationRunner {
 
       if (ix0 == 3) {
         Animal newAnimal = animalFactory.createAnimal("Dog", 2, "Healthy");
+        newAnimal.addObserver(observer);
         animalsCol.add(newAnimal);
         System.out.println("Factory created intake: " + newAnimal.getId()
             + " zone=" + newAnimal.getShelterZoneCode());
@@ -47,15 +49,29 @@ public class SimulationRunner {
   }
 
   private void seedAnimals() {
-    animalsCol.add(new Animal("A-1", "Cat", 3, "Healthy",
-        AnimalStatus.INTAKE, "SZ-001"));
-    animalsCol.add(new Animal("A-2", "Dog", 1, "Healthy",
-        AnimalStatus.AVAILABLE, "SZ-002"));
-    animalsCol.add(new Animal("A-3", "Rabbit", 2, "Needs checkup",
-        AnimalStatus.INTAKE, "SZ-003"));
-    animalsCol.add(new Animal("A-4", "Dog", 6, "Healthy",
-        AnimalStatus.AVAILABLE, "SZ-004"));
-    animalsCol.add(new Animal("A-5", "Cat", 4, "Vaccinated",
-        AnimalStatus.PENDING, "SZ-005"));
+    Animal a1 = new Animal("A-1", "Cat", 3, "Healthy",
+        AnimalStatus.INTAKE, "SZ-001");
+    a1.addObserver(observer);
+    animalsCol.add(a1);
+
+    Animal a2 = new Animal("A-2", "Dog", 1, "Healthy",
+        AnimalStatus.AVAILABLE, "SZ-002");
+    a2.addObserver(observer);
+    animalsCol.add(a2);
+
+    Animal a3 = new Animal("A-3", "Rabbit", 2, "Needs checkup",
+        AnimalStatus.INTAKE, "SZ-003");
+    a3.addObserver(observer);
+    animalsCol.add(a3);
+
+    Animal a4 = new Animal("A-4", "Dog", 6, "Healthy",
+        AnimalStatus.AVAILABLE, "SZ-004");
+    a4.addObserver(observer);
+    animalsCol.add(a4);
+
+    Animal a5 = new Animal("A-5", "Cat", 4, "Vaccinated",
+        AnimalStatus.PENDING, "SZ-005");
+    a5.addObserver(observer);
+    animalsCol.add(a5);
   }
 }

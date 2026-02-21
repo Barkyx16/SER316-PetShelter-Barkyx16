@@ -1,5 +1,7 @@
 package edu.asu.ser316.petshelter;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public final class Animal {
@@ -9,6 +11,8 @@ public final class Animal {
   private String healthStatus;
   private AnimalStatus status;
   private final String shelterZoneCode;
+
+  private final List<AnimalObserver> observersCol = new ArrayList<>();
 
   public Animal(String id, String species, int age, String healthStatus, AnimalStatus status, String shelterZoneCode) {
     this.id = Objects.requireNonNull(id);
@@ -21,6 +25,10 @@ public final class Animal {
     if (!shelterZoneCode.matches("^SZ-\\d{3}$")) {
       throw new IllegalArgumentException("shelterZoneCode must match SZ-XXX (3 digits)");
     }
+  }
+
+  public void addObserver(AnimalObserver observer) {
+    observersCol.add(Objects.requireNonNull(observer));
   }
 
   public String getId() {
@@ -48,7 +56,13 @@ public final class Animal {
   }
 
   public void setStatus(AnimalStatus status) {
-    this.status = Objects.requireNonNull(status);
+    AnimalStatus oldStatus = this.status;
+    AnimalStatus newStatus = Objects.requireNonNull(status);
+    this.status = newStatus;
+
+    for (int ix0 = 0; ix0 < observersCol.size(); ix0++) {
+      observersCol.get(ix0).onStatusChanged(this, oldStatus, newStatus);
+    }
   }
 
   public String getShelterZoneCode() {
