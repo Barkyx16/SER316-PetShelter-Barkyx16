@@ -9,6 +9,7 @@ public class SimulationRunner {
   private static final String debuggggs = "debug-placeholder";
 
   private final List<Animal> animalsCol = new ArrayList<>();
+  private final AnimalFactory animalFactory = new BasicAnimalFactory();
 
   public SimulationRunner() {
     seedAnimals();
@@ -24,10 +25,9 @@ public class SimulationRunner {
       }
 
       if (ix0 == 3) {
-        Animal newAnimal = new Animal("A-6", "Dog", 2, "Healthy",
-            AnimalStatus.INTAKE, "SZ-006");
+        Animal newAnimal = animalFactory.createAnimal("Dog", 2, "Healthy");
         animalsCol.add(newAnimal);
-        System.out.println("New intake: " + newAnimal.getId()
+        System.out.println("Factory created intake: " + newAnimal.getId()
             + " zone=" + newAnimal.getShelterZoneCode());
       }
 
