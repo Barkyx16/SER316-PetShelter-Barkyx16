@@ -32,3 +32,12 @@ During each simulation cycle, events will occur such as new animals arriving or 
 * Deciding whether adoptions should be random or follow specific rules.
 * Making sure the two design patterns feel naturally connected rather than artificially added.
 
+## Pattern Integration
+
+This project uses the Factory Method and Observer design patterns together to model how an animal shelter changes over time.
+
+The Factory Method handles animal intake. Whenever the simulation reaches an intake day, the factory creates a new Animal with the proper information like type, age, health, and shelter zone. This keeps object creation separate from the rest of the program so the simulation logic stays simple.
+
+Right after an animal is created, the system sends out an event through the observer event bus. Different observers listen for these events, such as a console logger and a statistics tracker. For example, an IntakeEvent happens when a new animal arrives, an AdoptionEvent happens when one is adopted, and a CapacityWarningEvent happens if the shelter goes over capacity.
+
+The patterns work together because the factory creates the animals and the observers react to what happens to them. This means new behavior like logging or analytics can be added without rewriting the main simulation, which keeps the design flexible and easier to expand.
