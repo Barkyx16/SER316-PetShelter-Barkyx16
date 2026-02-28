@@ -3,6 +3,13 @@ package edu.asu.ser316.petshelter;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.asu.ser316.petshelter.events.AdoptionEvent;
+import edu.asu.ser316.petshelter.events.CapacityWarningEvent;
+import edu.asu.ser316.petshelter.events.IntakeEvent;
+import edu.asu.ser316.petshelter.events.ShelterEventBus;
+import edu.asu.ser316.petshelter.observers.ConsoleLoggerObserver;
+import edu.asu.ser316.petshelter.observers.ShelterStatsObserver;
+
 public class SimulationRunner {
 
   @SuppressWarnings({"unused", "SS_SHOULD_BE_STATIC"})
@@ -12,7 +19,17 @@ public class SimulationRunner {
   private final AnimalFactory animalFactory = new BasicAnimalFactory();
   private final AnimalObserver observer = new ConsoleAnimalObserver();
 
+  // NEW OBSERVER SYSTEM
+  private final ShelterEventBus eventBus = new ShelterEventBus();
+  private final ShelterStatsObserver statsObserver = new ShelterStatsObserver();
+
   public SimulationRunner() {
+    // register observers for event bus
+    eventBus.registerObserver(new ConsoleLoggerObserver());
+    eventBus.registerObserver(statsObserver);
+
+    System.out.println("Observer event system initialized.");
+
     seedAnimals();
   }
 
@@ -29,8 +46,16 @@ public class SimulationRunner {
         Animal newAnimal = animalFactory.createAnimal("Dog", 2, "Healthy");
         newAnimal.addObserver(observer);
         animalsCol.add(newAnimal);
+
         System.out.println("Factory created intake: " + newAnimal.getId()
             + " zone=" + newAnimal.getShelterZoneCode());
+
+        // PUBLISH INTAKE EVENT
+        eventBus.publish(new IntakeEvent(
+            newAnimal.getId(),
+            ix0,
+            newAnimal.getShelterZoneCode()
+        ));
       }
 
       if (ix0 == 5) {
@@ -41,11 +66,25 @@ public class SimulationRunner {
       if (ix0 == 6) {
         animalsCol.get(1).setStatus(AnimalStatus.ADOPTED);
         System.out.println("Animal " + animalsCol.get(1).getId() + " status -> ADOPTED");
+
+        // PUBLISH ADOPTION EVENT
+        eventBus.publish(new AdoptionEvent(
+            animalsCol.get(1).getId(),
+            ix0
+        ));
+      }
+
+      // CAPACITY WARNING EXAMPLE
+      if (animalsCol.size() > 5) {
+        eventBus.publish(new CapacityWarningEvent("GENERAL", animalsCol.size(), 5));
       }
 
       System.out.println("Animals total: " + animalsCol.size());
       System.out.println();
     }
+
+    // PRINT SUMMARY
+    System.out.println(statsObserver.buildSummaryString());
   }
 
   private void seedAnimals() {
