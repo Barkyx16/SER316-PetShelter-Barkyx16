@@ -2,6 +2,12 @@
 
 “Screencast Link: <https://youtu.be/I1uE5_KPjL0>”
 
+## How to Run
+
+./gradlew build  
+./gradlew run  
+./gradlew test
+
 ## Project Overview
 
 This project is a small Java simulation of a pet shelter operating over time. The program will model animals entering the shelter, being cared for, and eventually being adopted. Each cycle of the simulation will print clear console output so it’s easy to follow what is happening in the system and how the shelter’s state changes.
