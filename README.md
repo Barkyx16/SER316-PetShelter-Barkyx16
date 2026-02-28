@@ -41,3 +41,23 @@ The Factory Method handles animal intake. Whenever the simulation reaches an int
 Right after an animal is created, the system sends out an event through the observer event bus. Different observers listen for these events, such as a console logger and a statistics tracker. For example, an IntakeEvent happens when a new animal arrives, an AdoptionEvent happens when one is adopted, and a CapacityWarningEvent happens if the shelter goes over capacity.
 
 The patterns work together because the factory creates the animals and the observers react to what happens to them. This means new behavior like logging or analytics can be added without rewriting the main simulation, which keeps the design flexible and easier to expand.
+
+## Functional Requirements Implemented
+
+R1 Animal Intake  
+During an intake cycle, the system creates a new animal using the Factory Method and assigns it to a shelter zone.
+
+R2 Status Change Tracking  
+Whenever an animal changes status (INTAKE, AVAILABLE, PENDING, ADOPTED), the change is printed and observers are notified.
+
+R3 Adoption Event  
+When an animal is adopted, an AdoptionEvent is triggered and recorded by the statistics observer.
+
+R4 Capacity Monitoring  
+If the number of animals goes over the shelter capacity, the system sends a CapacityWarningEvent.
+
+R5 Weekly Simulation Cycle  
+The program runs through a 7 cycle simulation that shows the shelter changing over time.
+
+R6 Statistics Summary  
+At the end of the simulation, a summary prints the total intakes, adoptions, and capacity warnings collected during the run.
