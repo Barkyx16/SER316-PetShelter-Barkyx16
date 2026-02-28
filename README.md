@@ -1,4 +1,5 @@
-# SER316 Pet Shelter Simulation (Deliverable A)
+# SER316 Pet Shelter Simulation (Deliverable A/B
+)
 
 ## Project Overview
 
